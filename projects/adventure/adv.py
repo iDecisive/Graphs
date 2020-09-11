@@ -29,6 +29,44 @@ player = Player(world.starting_room)
 # traversal_path = ['n', 'n']
 traversal_path = []
 
+#Vars
+
+stack = []
+visited = set()
+
+while len(world.rooms) > len(visited):
+
+    tempPath = [] #temp path variable
+    options = player.current_room.get_exits() #returns directions you can go
+
+    for option in options: #loop through potential directions you could go and if one isn't already in 'visited' go there
+        if player.current_room.get_room_in_direction(option) not in visited:
+            tempPath.append(option)
+
+    visited.add(player.current_room)
+
+    if len(tempPath) != 0:
+        stack.append(tempPath[len(tempPath) - 1])
+        player.travel(tempPath[len(tempPath) - 1])
+        traversal_path.append(tempPath[len(tempPath) - 1])
+
+    else: #if reaches a dead end...
+
+        end = stack.pop()
+
+        returnDir = None
+
+        if end == "n":
+            returnDir = "s"
+        elif end == "s":
+            returnDir = "n"
+        elif end == "e":
+            returnDir = "w"
+        elif end == "w":
+            returnDir = "e"
+
+        player.travel(returnDir)
+        traversal_path.append(returnDir)
 
 
 # TRAVERSAL TEST
@@ -51,12 +89,12 @@ else:
 #######
 # UNCOMMENT TO WALK AROUND
 #######
-player.current_room.print_room_description(player)
-while True:
-    cmds = input("-> ").lower().split(" ")
-    if cmds[0] in ["n", "s", "e", "w"]:
-        player.travel(cmds[0], True)
-    elif cmds[0] == "q":
-        break
-    else:
-        print("I did not understand that command.")
+# player.current_room.print_room_description(player)
+# while True:
+#     cmds = input("-> ").lower().split(" ")
+#     if cmds[0] in ["n", "s", "e", "w"]:
+#         player.travel(cmds[0], True)
+#     elif cmds[0] == "q":
+#         break
+#     else:
+#         print("I did not understand that command.")
